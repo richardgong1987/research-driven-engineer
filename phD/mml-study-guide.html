@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathematics for Machine Learning — Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --paper: #f7f3ec;
+    --cream: #ede8de;
+    --rust: #b04a1a;
+    --teal: #1a6b6e;
+    --gold: #c9962a;
+    --muted: #6b5e52;
+    --light-rule: #d4cec5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--rust), var(--gold), var(--teal));
+  }
+  header .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  header h1 em {
+    color: var(--gold);
+    font-style: normal;
+  }
+  header .authors {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #a09880;
+    letter-spacing: .08em;
+  }
+  header .tagline {
+    margin-top: 20px;
+    font-size: 15px;
+    color: #c8bfb0;
+    font-style: italic;
+    max-width: 620px;
+  }
+
+  .toc {
+    background: var(--cream);
+    border-bottom: 1px solid var(--light-rule);
+    padding: 32px 40px;
+  }
+  .toc-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .toc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .toc-item {
+    font-size: 13px;
+    color: var(--teal);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .02em;
+  }
+  .toc-item:hover { color: var(--rust); text-decoration: underline; }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ── IDEA CARD ── */
+  .idea {
+    margin: 52px 0 0;
+    border-top: 2px solid var(--ink);
+    padding-top: 36px;
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .idea-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 6px;
+  }
+  .idea-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: var(--light-rule);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .idea-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin: 22px 0 8px;
+  }
+  .label-what  { background: #e8f0ee; color: var(--teal); }
+  .label-plain { background: #fdf3e3; color: #8a5a10; }
+  .label-terms { background: #f5ebe8; color: var(--rust); }
+  .label-grammar { background: #eeeaf5; color: #5a3d8a; }
+
+  .what-box {
+    background: #edf4f3;
+    border-left: 4px solid var(--teal);
+    padding: 16px 20px;
+    font-size: 15px;
+    color: #133e40;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 4px;
+  }
+
+  .plain-box {
+    background: #fffbf3;
+    border-left: 4px solid var(--gold);
+    padding: 16px 20px;
+    font-size: 15px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 4px;
+    font-style: italic;
+    color: #5a420c;
+  }
+  .plain-box .emoji { font-style: normal; font-size: 1.3em; margin-right: 6px; }
+
+  /* terms table */
+  .terms-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .terms-table th {
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 12px 6px 0;
+    border-bottom: 1px solid var(--light-rule);
+  }
+  .terms-table td {
+    padding: 8px 12px 8px 0;
+    border-bottom: 1px solid var(--light-rule);
+    vertical-align: top;
+  }
+  .terms-table td:first-child { font-weight: 700; color: var(--rust); font-family: 'DM Mono', monospace; }
+  .terms-table td:nth-child(2) { color: var(--teal); font-family: 'DM Mono', monospace; }
+  .terms-table td:last-child { color: #444; }
+
+  .grammar-box {
+    background: #f4f1fb;
+    border-left: 4px solid #7c5cbf;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: #2e1d5a;
+  }
+  .grammar-box strong { color: #5a3d8a; }
+  .grammar-box .example {
+    background: #ece8f8;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: #3d2870;
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--light-rule);
+    margin: 64px 0 0;
+  }
+
+  footer {
+    background: var(--ink);
+    color: #806e5e;
+    text-align: center;
+    padding: 28px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 36px; }
+    main { padding: 0 18px 60px; }
+    .toc { padding: 24px 18px; }
+    .idea-num { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="subtitle">Reading Guide · 2024 Edition</div>
+  <h1>Mathematics for <em>Machine Learning</em></h1>
+  <div class="authors">Deisenroth · Faisal · Ong — Cambridge University Press</div>
+  <div class="tagline">Every big idea explained plainly, with key vocabulary in English and Chinese.</div>
+</header>
+
+<div class="toc">
+  <div class="toc-title">Ideas covered in this guide</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#idea1">#1 Why Math for ML?</a>
+    <a class="toc-item" href="#idea2">#2 Linear Algebra</a>
+    <a class="toc-item" href="#idea3">#3 Analytic Geometry</a>
+    <a class="toc-item" href="#idea4">#4 Matrix Decomposition</a>
+    <a class="toc-item" href="#idea5">#5 Vector Calculus</a>
+    <a class="toc-item" href="#idea6">#6 Probability Theory</a>
+    <a class="toc-item" href="#idea7">#7 Optimization</a>
+    <a class="toc-item" href="#idea8">#8 ML Fundamentals</a>
+    <a class="toc-item" href="#idea9">#9 Linear Regression</a>
+    <a class="toc-item" href="#idea10">#10 Dimensionality Reduction (PCA)</a>
+    <a class="toc-item" href="#idea11">#11 Density Estimation (GMM)</a>
+    <a class="toc-item" href="#idea12">#12 Classification (SVM)</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════ IDEA 1 ═══════════════════════════════ -->
+<div class="idea" id="idea1">
+  <div class="idea-header">
+    <span class="idea-num">01</span>
+    <h2 class="idea-title">Why Mathematics Is the Language of Machine Learning</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Most ML textbooks either skip the math or assume you already know it. This book fills that gap. The authors argue that without understanding the mathematical foundations — linear algebra, calculus, probability — you can <em>use</em> ML tools but cannot truly <em>understand</em> or improve them. Mathematics is not decoration; it is the engine inside every algorithm.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🎵</span>Imagine learning to play music. Some people just press buttons on a toy keyboard (they use ML tools). Others learn to read sheet music and understand chords — they can play any instrument and even write songs. This book teaches you the "sheet music" of machine learning.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>machine learning</td><td>机器学习</td><td>Teaching computers to learn from data without being explicitly programmed</td></tr>
+    <tr><td>algorithm</td><td>算法</td><td>A step-by-step procedure a computer follows to solve a problem</td></tr>
+    <tr><td>mathematical foundations</td><td>数学基础</td><td>The core math concepts everything else is built upon</td></tr>
+    <tr><td>practitioner</td><td>从业者</td><td>Someone who applies ML tools in real work</td></tr>
+    <tr><td>abstraction</td><td>抽象化</td><td>Hiding technical details to make something easier to use</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"bring … to the fore"</strong> — This is a fixed English phrase meaning "to put something into a prominent or important position." <em>Fore</em> means "front" (as in "foreground"). The authors write: "This book brings the mathematical foundations… to the fore."
+    <div class="example">Pattern: bring [something] to the fore → make [something] visible and important</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 2 ═══════════════════════════════ -->
+<div class="idea" id="idea2">
+  <div class="idea-header">
+    <span class="idea-num">02</span>
+    <h2 class="idea-title">Linear Algebra — The Language of Data Shapes</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    All data in ML — images, text embeddings, sensor readings — is stored as vectors and matrices. Linear algebra teaches us how to add, stretch, rotate, and transform these objects. The key ideas are: what a <em>vector space</em> is, how to solve systems of linear equations, and how linear transformations (matrices) reshape data.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">📦</span>Think of a vector as a list of numbers (like coordinates on a map: "3 steps right, 5 steps up"). A matrix is like a grid of numbers that, when you multiply it by a vector, moves or stretches it in space. When ML models process an image, they treat it as a huge list of numbers and use matrix operations millions of times per second.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>vector</td><td>向量</td><td>An ordered list of numbers representing direction and magnitude</td></tr>
+    <tr><td>matrix</td><td>矩阵</td><td>A rectangular grid of numbers; performs transformations</td></tr>
+    <tr><td>scalar</td><td>标量</td><td>A single number (no direction)</td></tr>
+    <tr><td>vector space</td><td>向量空间</td><td>A collection of vectors where addition and scaling always stay inside the collection</td></tr>
+    <tr><td>linear independence</td><td>线性无关</td><td>No vector in a set can be built by combining the others</td></tr>
+    <tr><td>basis</td><td>基底</td><td>A minimal set of vectors from which all others in the space can be built</td></tr>
+    <tr><td>linear mapping / transformation</td><td>线性映射</td><td>A function between vector spaces that preserves addition and scaling</td></tr>
+    <tr><td>system of linear equations</td><td>线性方程组</td><td>A set of equations like 2x+y=5, x−y=1 to be solved simultaneously</td></tr>
+    <tr><td>rank</td><td>秩</td><td>The number of truly independent directions in a matrix</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"such that"</strong> — In mathematics, "such that" introduces a condition or constraint. It means "with the property that" or "in a way that."
+    <div class="example">"Find a vector x such that Ax = b." → Find x which satisfies the condition Ax = b.</div>
+    This is very different from everyday English where "such that" is rare. In math texts, you will see it constantly.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 3 ═══════════════════════════════ -->
+<div class="idea" id="idea3">
+  <div class="idea-header">
+    <span class="idea-num">03</span>
+    <h2 class="idea-title">Analytic Geometry — Measuring Distance and Angle</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Vectors alone can't tell us how similar two things are. Chapter 3 adds geometry: inner products let us measure the length of a vector and the angle between two vectors. This is how ML measures similarity — for example, recommending movies by the "angle" between a user's preference vector and a film's feature vector. Projections let us find the closest point on a line (essential in regression).
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">📐</span>If two arrows point in almost the same direction, the angle between them is small — that means the two things are similar. If they point in completely different directions (90°), they are unrelated. The "dot product" is a number that captures this angle. Search engines and recommendation systems use exactly this idea to match your query to relevant results.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>inner product / dot product</td><td>内积 / 点积</td><td>Multiplies two vectors to give a single number capturing angle and length</td></tr>
+    <tr><td>norm (length)</td><td>范数（长度）</td><td>The "size" of a vector; computed from the inner product</td></tr>
+    <tr><td>orthogonal</td><td>正交的</td><td>Perpendicular; two vectors at exactly 90° — their dot product is 0</td></tr>
+    <tr><td>projection</td><td>投影</td><td>Finding the "shadow" of one vector onto another</td></tr>
+    <tr><td>rotation matrix</td><td>旋转矩阵</td><td>A matrix that rotates vectors without changing their length</td></tr>
+    <tr><td>cosine similarity</td><td>余弦相似度</td><td>Measuring similarity via the cosine of the angle between vectors</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>Passive voice in definitions</strong> — Math textbooks use passive voice heavily: "The norm is defined as…", "A basis is said to be orthonormal if…". This removes the subject (the mathematician) and makes the definition feel universal and objective.
+    <div class="example">Active: "We define the norm as ‖x‖." → Passive: "The norm is defined as ‖x‖."</div>
+    When reading, translate passive voice back to "someone defined it this way."
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 4 ═══════════════════════════════ -->
+<div class="idea" id="idea4">
+  <div class="idea-header">
+    <span class="idea-num">04</span>
+    <h2 class="idea-title">Matrix Decomposition — Taking Matrices Apart to Understand Them</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    A matrix can be broken into simpler pieces — like factoring the number 12 into 3×4. The most important decompositions are <em>eigenvalue decomposition</em> (finding the natural "stretching directions" of a transformation) and <em>Singular Value Decomposition (SVD)</em> (a universal tool that works on any matrix and underlies PCA, recommender systems, and data compression).
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🔬</span>When you squash or stretch a rubber band, it moves in one direction more than others. Eigenvectors are those special "natural directions" of a matrix. SVD is like taking any shape and finding its skeleton — it reveals what a matrix really does. Netflix used SVD to discover hidden patterns in how millions of people rate movies.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>eigenvalue</td><td>特征值</td><td>How much a transformation stretches in a special direction</td></tr>
+    <tr><td>eigenvector</td><td>特征向量</td><td>The special direction that only gets stretched (not rotated) by a transformation</td></tr>
+    <tr><td>determinant</td><td>行列式</td><td>A single number describing how much a matrix scales volumes</td></tr>
+    <tr><td>SVD (Singular Value Decomposition)</td><td>奇异值分解</td><td>Breaks any matrix into three simple matrices; reveals structure</td></tr>
+    <tr><td>diagonalization</td><td>对角化</td><td>Rewriting a matrix in its own natural coordinate system</td></tr>
+    <tr><td>trace</td><td>迹</td><td>Sum of the diagonal entries of a matrix</td></tr>
+    <tr><td>symmetric matrix</td><td>对称矩阵</td><td>A matrix equal to its own transpose: A = Aᵀ</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>The prefix "eigen-"</strong> — This comes from German, meaning "own" or "characteristic." In English it is kept as a loanword because there's no clean translation. You'll see it only in linear algebra. Similarly, "Ansatz" (an educated guess/approach) and "Zerlegung" (decomposition) appear sometimes in advanced texts.
+    <div class="example">eigenvalue = the matrix's "own" value · eigenvector = the matrix's "own" vector</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 5 ═══════════════════════════════ -->
+<div class="idea" id="idea5">
+  <div class="idea-header">
+    <span class="idea-num">05</span>
+    <h2 class="idea-title">Vector Calculus — Finding Which Way Is "Uphill"</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    To train a ML model, you need to minimize an error function (the "loss"). Calculus gives you the <em>gradient</em> — a vector that points in the direction of steepest increase of a function. By going in the <em>opposite</em> direction (gradient descent), you find the minimum. The chain rule allows you to differentiate complex nested functions — the backbone of neural network training (backpropagation).
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">⛰️</span>Imagine you're lost in the mountains in the fog. You want to reach the valley (lowest point = smallest error). You feel the ground under your feet — wherever it slopes downward most steeply, you walk that way. The gradient is like a compass that always points uphill; you do the opposite. That's gradient descent — the engine behind training every neural network.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>gradient</td><td>梯度</td><td>A vector of partial derivatives; points in direction of steepest increase</td></tr>
+    <tr><td>partial derivative</td><td>偏导数</td><td>How much a function changes when one variable changes, holding others fixed</td></tr>
+    <tr><td>chain rule</td><td>链式法则</td><td>Rule for differentiating a function inside another function: d/dx[f(g(x))]</td></tr>
+    <tr><td>Jacobian</td><td>雅可比矩阵</td><td>Matrix of all partial derivatives of a vector-valued function</td></tr>
+    <tr><td>loss function</td><td>损失函数</td><td>Measures how wrong a model's predictions are</td></tr>
+    <tr><td>gradient descent</td><td>梯度下降法</td><td>Repeatedly moving opposite to the gradient to minimize a function</td></tr>
+    <tr><td>backpropagation</td><td>反向传播</td><td>Applying chain rule backwards through a neural network to compute gradients</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"with respect to"</strong> — This is one of the most common phrases in mathematics. It means "treating [X] as the variable." It signals which variable you are differentiating or measuring against.
+    <div class="example">"The derivative of L with respect to θ" = how L changes as θ changes (everything else is fixed).</div>
+    You will see "w.r.t." as its abbreviation constantly in papers and textbooks.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 6 ═══════════════════════════════ -->
+<div class="idea" id="idea6">
+  <div class="idea-header">
+    <span class="idea-num">06</span>
+    <h2 class="idea-title">Probability Theory — Quantifying Uncertainty</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    The real world is noisy and uncertain. ML models must not only make predictions but also express <em>how confident</em> they are. Probability theory provides the framework: random variables, probability distributions (Gaussian, Bernoulli, etc.), and Bayes' theorem — which is how a model updates its beliefs when it sees new data. The Gaussian (normal) distribution is central because of its mathematical convenience.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🎲</span>Imagine a weather forecast: "70% chance of rain." It doesn't say "it WILL rain" — it gives a probability. ML models do the same for their predictions. Bayes' theorem is the rule for updating your belief: if you thought it was 60% likely to rain and then you see dark clouds, you update to 90%. This is how spam filters learn — starting with a guess, then updating with evidence.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>random variable</td><td>随机变量</td><td>A variable whose value is determined by a random process</td></tr>
+    <tr><td>probability distribution</td><td>概率分布</td><td>A function describing the likelihood of each possible value</td></tr>
+    <tr><td>Gaussian / normal distribution</td><td>高斯分布 / 正态分布</td><td>The famous bell curve; described by mean and variance</td></tr>
+    <tr><td>mean (expected value)</td><td>均值（期望值）</td><td>The average value of a random variable</td></tr>
+    <tr><td>variance</td><td>方差</td><td>How spread out the values are around the mean</td></tr>
+    <tr><td>Bayes' theorem</td><td>贝叶斯定理</td><td>Rule for updating probability given new evidence: P(A|B) = P(B|A)P(A)/P(B)</td></tr>
+    <tr><td>prior / posterior</td><td>先验 / 后验</td><td>Belief before / after seeing data</td></tr>
+    <tr><td>likelihood</td><td>似然度</td><td>How probable the observed data is under a given model</td></tr>
+    <tr><td>conditional probability</td><td>条件概率</td><td>Probability of A given that B has already occurred: P(A|B)</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>The vertical bar "|" — reading "given"</strong> — In probability, P(A | B) is read as "the probability of A <em>given</em> B." The word "given" here means "assuming B is already true / has already happened." This is not the same as "if" in ordinary English — it implies B is certain, not just possible.
+    <div class="example">P(rain | dark clouds) = probability of rain, given that we already see dark clouds.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 7 ═══════════════════════════════ -->
+<div class="idea" id="idea7">
+  <div class="idea-header">
+    <span class="idea-num">07</span>
+    <h2 class="idea-title">Optimization — Finding the Best Answer</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Machine learning training is fundamentally an optimization problem: find the model parameters that minimize the loss function. Chapter 7 covers convex optimization (where you are guaranteed a global minimum), gradient descent variants, and constrained optimization (Lagrange multipliers) — used when parameters must satisfy certain conditions.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🏆</span>Imagine trying to find the deepest point of a hilly landscape blindfolded. If the landscape has only one valley (convex), you can always find the bottom by walking downhill. If it has many hills and valleys, you might get stuck in a small dip and miss the real deepest point. Optimization is the science of finding the true lowest point, reliably and efficiently.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>optimization</td><td>优化</td><td>Finding the input that makes a function as small (or large) as possible</td></tr>
+    <tr><td>convex function</td><td>凸函数</td><td>A "bowl-shaped" function with only one minimum</td></tr>
+    <tr><td>local minimum</td><td>局部最小值</td><td>The lowest point in a neighborhood, but not necessarily globally</td></tr>
+    <tr><td>global minimum</td><td>全局最小值</td><td>The absolute lowest point of the entire function</td></tr>
+    <tr><td>gradient descent</td><td>梯度下降</td><td>Step-by-step movement opposite to the gradient</td></tr>
+    <tr><td>learning rate</td><td>学习率</td><td>How large each step is during gradient descent</td></tr>
+    <tr><td>Lagrange multiplier</td><td>拉格朗日乘子</td><td>A technique for optimization with equality constraints</td></tr>
+    <tr><td>stochastic gradient descent (SGD)</td><td>随机梯度下降</td><td>Gradient descent using a random sample of data at each step</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>Infinitive vs. gerund after verbs</strong> — Notice: "we aim <em>to minimize</em>" vs "we avoid <em>getting stuck</em>." In mathematical English, <em>aim/seek/want/need</em> are followed by "to + verb." Verbs like <em>avoid/consider/discuss</em> take "verb+ing." This pattern is very consistent in academic writing.
+    <div class="example">✓ "We seek to find parameters that minimize the loss."<br>✓ "We avoid overfitting by regularizing."</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 8 ═══════════════════════════════ -->
+<div class="idea" id="idea8">
+  <div class="idea-header">
+    <span class="idea-num">08</span>
+    <h2 class="idea-title">The Three Pillars of ML — Data, Models, and Learning</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Every machine learning system consists of three things: (1) <strong>data</strong> — observations from the world; (2) a <strong>model</strong> — a mathematical structure that approximates the pattern in the data; and (3) a <strong>learning algorithm</strong> — the procedure that fits the model to the data by adjusting parameters to minimize prediction error on <em>unseen</em> data, not just training data.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🍳</span>Think of baking. The data is your ingredients. The model is the recipe (a specific structure). Training is adjusting the recipe — adding more sugar, less salt — until the cake tastes good. But the real test is whether someone who has never tried YOUR cake (unseen data) also loves it. That's called generalization.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>training data</td><td>训练数据</td><td>Examples the model learns from</td></tr>
+    <tr><td>test data</td><td>测试数据</td><td>Unseen examples used to evaluate how well the model generalizes</td></tr>
+    <tr><td>parameters</td><td>参数</td><td>The adjustable numbers inside a model (e.g., weights in a neural network)</td></tr>
+    <tr><td>overfitting</td><td>过拟合</td><td>Model memorizes training data but fails on new data</td></tr>
+    <tr><td>generalization</td><td>泛化</td><td>Performing well on unseen data — the true goal of ML</td></tr>
+    <tr><td>hyperparameter</td><td>超参数</td><td>Settings chosen before training (e.g., learning rate, number of layers)</td></tr>
+    <tr><td>cross-validation</td><td>交叉验证</td><td>A technique to estimate generalization by testing on multiple data splits</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"guard against"</strong> — This phrasal verb means "to protect or defend against something bad." The authors write: "guidelines for building experimental set-ups that guard against overly optimistic evaluations."
+    <div class="example">"Guard against overfitting" = take steps to prevent overfitting from happening.</div>
+    Other similar expressions: <em>hedge against</em> (protect financially), <em>insure against</em> (formal), <em>safeguard against</em>.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 9 ═══════════════════════════════ -->
+<div class="idea" id="idea9">
+  <div class="idea-header">
+    <span class="idea-num">09</span>
+    <h2 class="idea-title">Linear Regression — Fitting a Line Through Data</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Linear regression is the simplest ML model: predict a number by fitting a straight line (or hyperplane) through data. The book teaches three levels: <em>maximum likelihood estimation</em> (find the line that makes the data most probable), <em>MAP estimation</em> (add prior knowledge to avoid extreme solutions), and <em>Bayesian regression</em> (maintain a full probability distribution over possible lines, not just one best guess).
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">📈</span>If you plot house prices against house size, you'll see a rough straight line trend. Linear regression finds the best line through those dots — the one that is, on average, closest to all the data points. The "Bayesian" version is more careful: instead of one line, it keeps track of ALL plausible lines and their probabilities — so you get not just a prediction but also an uncertainty range.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>linear regression</td><td>线性回归</td><td>Modeling the relationship between input and a continuous output with a line</td></tr>
+    <tr><td>maximum likelihood estimation (MLE)</td><td>最大似然估计</td><td>Choose parameters that make the observed data most probable</td></tr>
+    <tr><td>maximum a posteriori (MAP)</td><td>最大后验估计</td><td>MLE + a prior belief about what good parameters look like</td></tr>
+    <tr><td>Bayesian inference</td><td>贝叶斯推断</td><td>Maintaining a full probability distribution over parameters</td></tr>
+    <tr><td>least squares</td><td>最小二乘法</td><td>Minimizing the sum of squared differences between predictions and truth</td></tr>
+    <tr><td>regularization</td><td>正则化</td><td>Adding a penalty for large parameters to prevent overfitting</td></tr>
+    <tr><td>noise / residual</td><td>噪声 / 残差</td><td>The unexplained difference between the model's prediction and the true value</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"integrate out"</strong> — In Bayesian statistics, "we integrate the parameters out" means mathematically removing them from the equation by summing over all their possible values. In everyday English, "integrate" means to bring things together — here it has a very specific calculus meaning.
+    <div class="example">"Instead of optimizing, we integrate the parameters out." = We don't pick one value for the parameters; we consider all values by integrating over them.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 10 ═══════════════════════════════ -->
+<div class="idea" id="idea10">
+  <div class="idea-header">
+    <span class="idea-num">10</span>
+    <h2 class="idea-title">PCA — Compressing High-Dimensional Data</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Real-world data has thousands of dimensions (e.g., a 28×28 image = 784 numbers). Most of those dimensions carry redundant information. Principal Component Analysis (PCA) finds a small number of directions that capture most of the variation in the data. It uses eigenvectors to rotate the data into a new coordinate system where the most important dimensions come first.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">📸</span>Imagine photographing a 3D object. A good photo taken from the right angle can tell you almost everything about the object's shape using just 2 dimensions. PCA finds the best "camera angle" for your data — the direction that shows the most variation, then the next best, and so on. You can then describe your data with far fewer numbers without losing much information.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>PCA (Principal Component Analysis)</td><td>主成分分析</td><td>Technique to reduce dimensions by finding directions of maximum variance</td></tr>
+    <tr><td>dimensionality reduction</td><td>降维</td><td>Representing high-dimensional data with fewer dimensions</td></tr>
+    <tr><td>principal component</td><td>主成分</td><td>A direction of maximum variance in the data; an eigenvector of the covariance matrix</td></tr>
+    <tr><td>covariance matrix</td><td>协方差矩阵</td><td>A matrix summarizing how each pair of dimensions varies together</td></tr>
+    <tr><td>variance</td><td>方差</td><td>How much data spreads in a particular direction</td></tr>
+    <tr><td>projection</td><td>投影</td><td>Mapping data onto a lower-dimensional subspace</td></tr>
+    <tr><td>reconstruction error</td><td>重建误差</td><td>How much information is lost when you compress and then decompress the data</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>Noun stacking</strong> — Technical English often stacks many nouns together without connectors: "high-dimensional data representation," "covariance matrix eigenvector decomposition." Read these from right to left: the <em>last</em> noun is the main thing; earlier nouns describe it.
+    <div class="example">"high-dimensional data representation" = a representation [of data] [that is high-dimensional]</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 11 ═══════════════════════════════ -->
+<div class="idea" id="idea11">
+  <div class="idea-header">
+    <span class="idea-num">11</span>
+    <h2 class="idea-title">Gaussian Mixture Models — Discovering Hidden Groups</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Sometimes data comes from several different subgroups (e.g., customer types, species of plants) but the labels are hidden. A Gaussian Mixture Model (GMM) assumes the data is a blend of several Gaussian distributions. The EM algorithm (Expectation-Maximization) iteratively guesses which group each point belongs to and then refines the group shapes — like sorting a mixed bag of coins without seeing their faces directly.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">🌌</span>Imagine you're looking at stars through a telescope. Some stars form one cluster, others form another. You don't have labels — you just see a cloud of dots. GMM says: "I'll assume there are K groups. Let me figure out where the groups are and how big they are." It keeps refining its guess until the groups make sense. This is unsupervised learning — learning without labels.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>density estimation</td><td>密度估计</td><td>Learning the probability distribution that generated the data</td></tr>
+    <tr><td>Gaussian Mixture Model (GMM)</td><td>高斯混合模型</td><td>A model that represents data as a mixture of several Gaussian distributions</td></tr>
+    <tr><td>EM algorithm</td><td>期望最大化算法</td><td>Iterative method: E-step (guess assignments), M-step (update parameters)</td></tr>
+    <tr><td>unsupervised learning</td><td>无监督学习</td><td>Learning patterns from data without labeled examples</td></tr>
+    <tr><td>cluster</td><td>簇 / 类</td><td>A group of data points that are similar to each other</td></tr>
+    <tr><td>latent variable</td><td>潜变量</td><td>A hidden variable that is not directly observed but influences the data</td></tr>
+    <tr><td>mixture weight</td><td>混合权重</td><td>How much each Gaussian component contributes to the overall distribution</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"iterative scheme"</strong> — An <em>iterative</em> process is one that repeats a cycle of steps, improving with each repetition. A <em>scheme</em> in British academic English means a method or plan (not a devious plan as in American English). You'll see "iterative scheme," "iterative procedure," and "iterative algorithm" used interchangeably.
+    <div class="example">"We discuss an iterative scheme to find the parameters of this model." = We explain a method that repeatedly updates the parameters until they converge.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ IDEA 12 ═══════════════════════════════ -->
+<div class="idea" id="idea12">
+  <div class="idea-header">
+    <span class="idea-num">12</span>
+    <h2 class="idea-title">Support Vector Machines — Drawing the Best Boundary</h2>
+  </div>
+
+  <div class="section-label label-what">📘 What the authors want to teach you</div>
+  <div class="what-box">
+    Classification assigns a label (e.g., spam / not spam, cat / dog) to each data point. Support Vector Machines (SVMs) find the hyperplane that separates two classes with the <em>maximum margin</em> — the widest possible gap between the boundary and the nearest points of each class. This makes the classifier robust. The kernel trick extends SVMs to non-linearly separable data.
+  </div>
+
+  <div class="section-label label-plain">🧒 Plain explanation</div>
+  <div class="plain-box">
+    <span class="emoji">⚔️</span>Imagine drawing a line on a map to separate two countries. Many lines could separate them, but the wisest boundary gives the most space (buffer zone) to both sides. That's exactly what SVMs do — they find the line (or plane) with the biggest buffer. Points right on the edge of the buffer are the "support vectors" — they're the hardest cases and they define the boundary.
+  </div>
+
+  <div class="section-label label-terms">🔑 Key terms</div>
+  <table class="terms-table">
+    <tr><th>English</th><th>中文</th><th>Meaning</th></tr>
+    <tr><td>classification</td><td>分类</td><td>Assigning data points to discrete categories/labels</td></tr>
+    <tr><td>SVM (Support Vector Machine)</td><td>支持向量机</td><td>Classifier that finds the maximum-margin separating hyperplane</td></tr>
+    <tr><td>hyperplane</td><td>超平面</td><td>A flat boundary in high dimensions (a line in 2D, a plane in 3D)</td></tr>
+    <tr><td>margin</td><td>间隔</td><td>The gap between the decision boundary and the nearest data points</td></tr>
+    <tr><td>support vectors</td><td>支持向量</td><td>The data points closest to the decision boundary that define it</td></tr>
+    <tr><td>kernel trick</td><td>核函数技巧</td><td>Implicitly mapping data to a higher-dimensional space to make it linearly separable</td></tr>
+    <tr><td>supervised learning</td><td>有监督学习</td><td>Learning from labeled training examples</td></tr>
+    <tr><td>decision boundary</td><td>决策边界</td><td>The surface that separates different class regions</td></tr>
+  </table>
+
+  <div class="section-label label-grammar">✏️ Grammar note</div>
+  <div class="grammar-box">
+    <strong>"require special care"</strong> — This is a polite academic way of saying "this is tricky and you must be careful." Authors use it to signal that the upcoming concept is subtle or that common intuition may mislead you. Equivalent phrases: "warrants attention," "deserves careful treatment," "must be handled with care."
+    <div class="example">"Unlike regression, where labels were real-valued, labels in classification are integers, which requires special care." = Watch out — integer labels behave differently and need different mathematical treatment.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+</main>
+
+<footer>
+  Mathematics for Machine Learning · Deisenroth, Faisal &amp; Ong · Study Guide
+</footer>
+
+</body>
+</html>
