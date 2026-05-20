@@ -1,0 +1,2 @@
+Refactoring.Guru (no date) Design Patterns. Available at: https://refactoring.guru/design-patterns
+
